@@ -302,7 +302,7 @@ def find_binary(name: str, configured: str = "") -> str:
 
 
 def _creation_flags() -> int:
-    return subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0
+    return int(getattr(subprocess, "CREATE_NO_WINDOW", 0)) if sys.platform == "win32" else 0
 
 
 def _run_command(

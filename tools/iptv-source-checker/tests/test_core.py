@@ -16,6 +16,7 @@ from iptv_source_checker.core import (
     ProbeResult,
     StreamResolution,
     _CommandCancelled,
+    _creation_flags,
     _run_command,
     capture_frame,
     export_results_csv,
@@ -213,6 +214,24 @@ def test_public_fixture_is_valid_json_for_documented_probe_shape() -> None:
 def test_no_shell_executable_is_needed_for_binary_discovery() -> None:
     python_name = "python.exe" if shutil.which("python.exe") else "python"
     assert Path(find_binary(python_name)).is_file()
+
+
+def test_creation_flags_uses_windows_constant_when_available(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(sys, "platform", "win32")
+    monkeypatch.setattr(subprocess, "CREATE_NO_WINDOW", 123, raising=False)
+
+    assert _creation_flags() == 123
+
+
+def test_creation_flags_falls_back_when_windows_constant_is_unavailable(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(sys, "platform", "win32")
+    monkeypatch.delattr(subprocess, "CREATE_NO_WINDOW", raising=False)
+
+    assert _creation_flags() == 0
 
 
 def test_running_command_can_be_cancelled_without_waiting_for_timeout() -> None:
