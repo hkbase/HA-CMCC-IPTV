@@ -44,6 +44,11 @@ jobs:
         working-directory: tools/iptv-source-checker
         run: uv sync --frozen
 
+      - name: Install FFmpeg tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ffmpeg
+
       - name: Verify FFmpeg tools
         run: |
           ffmpeg -version
