@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Logo 画面复核</title>
+    <link rel="stylesheet" href="/review.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand-block">
+        <h1>Logo 画面复核</h1>
+        <span id="dataset-summary" class="muted">正在载入</span>
+      </div>
+      <div class="stats" aria-label="复核统计">
+        <span><strong id="reviewed-count">0</strong> 已复核</span>
+        <span class="stat-match"><strong id="match-count">0</strong> 一致</span>
+        <span class="stat-mismatch"><strong id="mismatch-count">0</strong> 不一致</span>
+        <span class="stat-uncertain"><strong id="uncertain-count">0</strong> 无法确定</span>
+      </div>
+      <div class="top-actions">
+        <span id="save-status" class="save-status">未保存</span>
+        <button id="export-button" type="button">导出 CSV</button>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <aside class="queue-panel" aria-label="频道列表">
+        <div class="queue-filters">
+          <label>
+            <span>搜索</span>
+            <input id="search-input" type="search" placeholder="频道、分组或 URL">
+          </label>
+          <div class="filter-grid">
+            <label>
+              <span>结论</span>
+              <select id="decision-filter">
+                <option value="all">全部</option>
+                <option value="pending">待复核</option>
+                <option value="一致">一致</option>
+                <option value="不一致">不一致</option>
+                <option value="无法确定">无法确定</option>
+              </select>
+            </label>
+            <label>
+              <span>画面</span>
+              <select id="capture-filter">
+                <option value="all">全部</option>
+                <option value="available">已捕获</option>
+                <option value="missing">无画面</option>
+              </select>
+            </label>
+          </div>
+        </div>
+        <div class="queue-heading">
+          <span id="visible-count">0 条</span>
+          <button id="next-pending-button" type="button">下一待复核</button>
+        </div>
+        <div id="channel-list" class="channel-list" role="listbox" aria-label="频道源"></div>
+      </aside>
+
+      <main class="review-panel">
+        <section class="channel-heading">
+          <div>
+            <div class="heading-line">
+              <h2 id="channel-name">选择频道</h2>
+              <span id="decision-badge" class="decision-badge pending">待复核</span>
+            </div>
+            <p id="channel-meta" class="muted"></p>
+          </div>
+          <div class="navigation-controls">
+            <button id="previous-button" class="icon-button" type="button" title="上一条" aria-label="上一条">&#8592;</button>
+            <button id="next-button" class="icon-button" type="button" title="下一条" aria-label="下一条">&#8594;</button>
+          </div>
+        </section>
+
+        <section class="comparison-grid">
+          <figure class="asset-pane logo-pane">
+            <figcaption>Logo</figcaption>
+            <a id="logo-link" target="_blank" rel="noreferrer">
+              <img id="logo-image" alt="当前频道 Logo">
+              <span id="logo-empty" class="empty-state">没有可用 Logo</span>
+            </a>
+          </figure>
+          <figure class="asset-pane crop-pane">
+            <figcaption>画面左上角</figcaption>
+            <a id="crop-link" target="_blank" rel="noreferrer">
+              <img id="crop-image" alt="捕获画面左上角裁剪">
+              <span id="crop-empty" class="empty-state">没有左上角裁剪</span>
+            </a>
+          </figure>
+        </section>
+
+        <section class="frame-section">
+          <div class="section-label">
+            <span>完整捕获画面</span>
+            <span id="capture-status" class="capture-status"></span>
+          </div>
+          <a id="frame-link" class="frame-stage" target="_blank" rel="noreferrer">
+            <img id="frame-image" alt="完整捕获画面">
+            <span id="frame-empty" class="empty-state">没有捕获画面</span>
+          </a>
+        </section>
+
+        <section class="decision-section" aria-label="复核结论">
+          <div class="decision-buttons">
+            <button type="button" data-decision="一致" class="decision-button match">一致</button>
+            <button type="button" data-decision="不一致" class="decision-button mismatch">不一致</button>
+            <button type="button" data-decision="无法确定" class="decision-button uncertain">无法确定</button>
+            <button id="clear-button" type="button" class="clear-button">清除</button>
+          </div>
+          <label class="auto-advance">
+            <input id="auto-advance" type="checkbox">
+            <span>标记后下一条</span>
+          </label>
+          <label class="note-field">
+            <span>备注</span>
+            <input id="note-input" type="text" maxlength="500" disabled>
+          </label>
+        </section>
+
+        <section class="source-section">
+          <div>
+            <span class="source-label">源地址</span>
+            <code id="source-url"></code>
+          </div>
+          <button id="copy-button" class="icon-button" type="button" title="复制 URL" aria-label="复制 URL">&#10697;</button>
+        </section>
+      </main>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="/review.js" defer></script>
+  </body>
+</html>

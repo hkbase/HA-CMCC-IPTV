@@ -1,0 +1,5 @@
+include run.py
+include run_review.py
+include sort_quality.py
+include THIRD_PARTY_NOTICES.md
+recursive-include src/iptv_source_checker/review_web *.html *.css *.js

@@ -1,0 +1,62 @@
+name: Project Checks
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: project-checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+
+      - uses: astral-sh/setup-uv@94527f2e458b27549849d47d273a16bec83a01e9 # v7
+        with:
+          enable-cache: true
+          cache-dependency-glob: tools/iptv-source-checker/uv.lock
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '26'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run project checks
+        run: npm run check
+
+      - name: Install Python dependencies
+        working-directory: tools/iptv-source-checker
+        run: uv sync --frozen
+
+      - name: Verify FFmpeg tools
+        run: |
+          ffmpeg -version
+          ffprobe -version
+
+      - name: Run Python tests
+        working-directory: tools/iptv-source-checker
+        run: uv run pytest
+
+      - name: Run Python lint
+        working-directory: tools/iptv-source-checker
+        run: uv run ruff check .
+
+      - name: Run Python type checks
+        working-directory: tools/iptv-source-checker
+        run: uv run mypy src

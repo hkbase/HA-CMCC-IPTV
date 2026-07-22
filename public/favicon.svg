@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="HA CMCC IPTV">
+  <rect width="64" height="64" rx="14" fill="#1357d4"/>
+  <path d="M14 18h36v24H14z" fill="#fff"/>
+  <path d="M20 46h24v4H20z" fill="#fff"/>
+  <path d="M23 25h18v4H23zm0 8h12v4H23z" fill="#1357d4"/>
+</svg>
